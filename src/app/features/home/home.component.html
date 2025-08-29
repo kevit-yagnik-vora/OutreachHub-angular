@@ -1,0 +1,92 @@
+<div class="p-6 space-y-6 bg-gray-50 min-h-screen">
+  <!-- Header Section -->
+  <div>
+    <h1 class="text-2xl font-bold text-gray-800">Dashboard</h1>
+    <p class="text-gray-500">Welcome back! Here’s your Outreach overview.</p>
+  </div>
+
+  <!-- Charts Grid -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <!-- Line Chart -->
+    <div class="bg-white p-6 rounded-2xl shadow">
+      <h2 class="text-lg font-semibold mb-4 text-gray-700">Campaigns Per Day</h2>
+      <canvas baseChart 
+        [data]="lineChartData" 
+        [options]="lineChartOptions" 
+        [type]="'line'">
+      </canvas>
+    </div>
+
+    <!-- Bar Chart -->
+    <div class="bg-white p-6 rounded-2xl shadow">
+      <h2 class="text-lg font-semibold mb-4 text-gray-700">Contacts Growth</h2>
+      <canvas baseChart 
+        [data]="barChartData" 
+        [options]="barChartOptions" 
+        [type]="'bar'">
+      </canvas>
+    </div>
+
+    <!-- Pie Chart -->
+    <div class="bg-white p-6 rounded-2xl shadow">
+      <h2 class="text-lg font-semibold mb-4 text-gray-700">Message Types</h2>
+      <canvas baseChart 
+        [data]="pieChartData" 
+        [options]="pieChartOptions" 
+        [type]="'pie'">
+      </canvas>
+    </div>
+  </div>
+
+  <!-- Tables Grid -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <!-- Recent Campaigns -->
+    <div class="bg-white p-6 rounded-2xl shadow">
+      <h2 class="text-lg font-semibold mb-4 text-gray-700">Recent Campaigns</h2>
+      <table class="w-full text-sm text-left text-gray-600">
+        <thead class="bg-gray-100 text-gray-700">
+          <tr>
+            <th class="px-4 py-2">Name</th>
+            <th class="px-4 py-2">Status</th>
+            <th class="px-4 py-2">Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="border-b">
+            <td class="px-4 py-2">Spring Sale</td>
+            <td class="px-4 py-2 text-green-600 font-medium">Running</td>
+            <td class="px-4 py-2">Aug 28</td>
+          </tr>
+          <tr class="border-b">
+            <td class="px-4 py-2">Summer Blast</td>
+            <td class="px-4 py-2 text-gray-600">Draft</td>
+            <td class="px-4 py-2">Aug 22</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Top Contacts -->
+    <div class="bg-white p-6 rounded-2xl shadow">
+      <h2 class="text-lg font-semibold mb-4 text-gray-700">Top Contacts</h2>
+      <table class="w-full text-sm text-left text-gray-600">
+        <thead class="bg-gray-100 text-gray-700">
+          <tr>
+            <th class="px-4 py-2">Name</th>
+            <th class="px-4 py-2">Engagement</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="border-b">
+            <td class="px-4 py-2">John Doe</td>
+            <td class="px-4 py-2">85%</td>
+          </tr>
+          <tr class="border-b">
+            <td class="px-4 py-2">Jane Smith</td>
+            <td class="px-4 py-2">72%</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

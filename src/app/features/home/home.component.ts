@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { ChartConfiguration, ChartData, ChartOptions } from 'chart.js';
+import { AuthService } from '../../core/auth/auth.service';
 
 @Component({
   selector: 'app-home',
@@ -7,6 +8,8 @@ import { ChartConfiguration, ChartData, ChartOptions } from 'chart.js';
   styleUrl: './home.component.scss',
 })
 export class HomeComponent {
+
+  constructor(private auth: AuthService) {}
   // ===== Line Chart (Campaigns per Day) =====
   lineChartOptions: ChartOptions<'line'> = {
     responsive: true,
@@ -59,4 +62,6 @@ export class HomeComponent {
       },
     ],
   };
+
+  user = this.auth.getUserData();
 }

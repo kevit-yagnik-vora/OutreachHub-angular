@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AuthService } from '../../../services/auth.service';
+import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-login',
@@ -25,19 +25,11 @@ export class LoginComponent {
 
   submit() {
     if (this.form.invalid) return;
-    console.log(this.form.value);
     this.auth
       .login(this.form.value.email ?? '', this.form.value.password ?? '')
       .subscribe({
-        next: (ok: any | null) => {
-          if (ok && ok.access_token) {
-            this.router.navigateByUrl('/');
-            this.auth.setToken(ok.access_token);
-          } else this.error = 'Invalid credentials';
-        },
-        error: (err) => {
-          this.error = 'Login failed';
-        },
+        next: () => this.router.navigateByUrl('/'),
+        error: () => (this.error = 'Invalid credentials'),
       });
   }
 }

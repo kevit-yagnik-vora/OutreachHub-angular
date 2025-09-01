@@ -1,7 +1,14 @@
-<!-- Centered auth card layout -->
-<div class="min-h-screen flex items-center justify-center bg-gray-50">
-  <div class="w-full max-w-md bg-white shadow rounded-2xl p-6">
-    <!-- child route (login/register) will render here -->
-    <router-outlet></router-outlet>
+<!-- Auth Layout -->
+<div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-red-200  to-sky-300 px-4">
+  <div class="w-full max-w-md">
+    <!-- Card where child routes render -->
+    <div class="relative bg-white/90 backdrop-blur-sm shadow-xl rounded-3xl p-8 border border-white/50">
+      <router-outlet></router-outlet>
+    </div>
+
+    <!-- Footer -->
+    <p class="mt-6 text-center text-xs text-gray-500">
+      © 2025 OutreachHub. All rights reserved.
+    </p>
   </div>
 </div>

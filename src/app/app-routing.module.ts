@@ -23,7 +23,7 @@ const routes: Routes = [
     path: 'auth',
     component: AuthLayoutComponent,
     loadChildren: () =>
-      import('./features/auth/auth.module').then((m) => m.AuthModule),
+      import('./core/auth/auth.module').then((m) => m.AuthModule),
   },
   { path: '**', redirectTo: '' },
 ];

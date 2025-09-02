@@ -3,15 +3,6 @@ import { RouterModule, Routes } from '@angular/router';
 import { MainLayoutComponent } from './layout/main-layout/main-layout.component';
 import { AuthLayoutComponent } from './layout/auth-layout/auth-layout.component';
 
-// const routes: Routes = [
-//   {
-//     path: 'home',
-//     loadChildren: () =>
-//       import('./features/home/home.module').then((m) => m.HomeModule),
-//   },
-//   { path: 'home', loadChildren: () => import('./features/workspace/workspace.module').then(m => m.WorkspaceModule) },
-// ];
-
 const routes: Routes = [
   {
     path: '',
@@ -24,6 +15,15 @@ const routes: Routes = [
     component: AuthLayoutComponent,
     loadChildren: () =>
       import('./core/auth/auth.module').then((m) => m.AuthModule),
+  },
+  {
+    path: 'contacts',
+    component: MainLayoutComponent,
+
+    loadChildren: () =>
+      import('./features/contacts/contacts.module').then(
+        (m) => m.ContactsModule
+      ),
   },
   { path: '**', redirectTo: '' },
 ];

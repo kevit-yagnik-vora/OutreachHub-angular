@@ -1,0 +1,35 @@
+<div class="p-6 container m-auto">
+  <div class="max-w-2xl mx-auto bg-white rounded-2xl border shadow p-6">
+    <div class="flex items-start justify-between mb-4">
+      <div>
+        <h1 class="text-2xl font-bold text-gray-800">{{ contact?.name }}</h1>
+        <p class="text-gray-500">Created: {{ contact?.createdAt | date:'medium' }}</p>
+      </div>
+      <a [routerLink]="['/contacts/edit', contact?._id]" class="text-indigo-600 hover:underline">Edit</a>
+    </div>
+
+    <div class="space-y-4">
+      <div>
+        <div class="text-sm text-gray-500">Phone</div>
+        <div class="text-gray-800 font-medium">{{ contact?.phoneNumber }}</div>
+      </div>
+
+      <div>
+        <div class="text-sm text-gray-500">Tags</div>
+        <div class="mt-1">
+          <ng-container *ngIf="contact?.tags?.length; else none">
+            <span *ngFor="let tag of contact?.tags"
+                  class="inline-block bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded-full text-xs mr-1 mb-1">
+              {{ tag }}
+            </span>
+          </ng-container>
+          <ng-template #none>—</ng-template>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-6">
+      <a routerLink="/contacts" class="text-gray-600 hover:underline">← Back to Contacts</a>
+    </div>
+  </div>
+</div>

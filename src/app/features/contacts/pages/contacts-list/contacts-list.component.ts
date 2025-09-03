@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ContactService } from '../../contact.service';
 import { IContact } from '../../model/contact.model';
+import { Subscription } from 'rxjs';
+import { WorkspaceService } from '../../../../core/services/workspace.service';
 
 @Component({
   selector: 'app-contacts-list',
@@ -18,18 +20,48 @@ export class ContactsListComponent implements OnInit {
   showConfirm = false;
   contactToDelete: IContact | null = null;
 
-  constructor(private contactService: ContactService) {}
+  private wsSub?: Subscription;
+
+  constructor(
+    private contactService: ContactService,
+    private workspaceService: WorkspaceService
+  ) {}
 
   ngOnInit() {
-    this.loadContacts();
+    // subscribe to workspace changes and reload
+    this.wsSub = this.workspaceService.selectedWorkspace$.subscribe((ws) => {
+      // when ws changes (or becomes available), reload contacts
+      if (ws) {
+        this.page = 1; // reset page when workspace changes
+        this.loadContacts();
+      }
+    });
+
+    // initial load - only if workspace already present
+    if (this.workspaceService.getWorkspace()) {
+      this.loadContacts();
+    }
+  }
+
+  ngOnDestroy() {
+    this.wsSub?.unsubscribe();
   }
 
   /** Load contacts from API */
   loadContacts() {
-    this.contactService.getContacts(this.page, this.limit).subscribe((res) => {
-      this.contacts = res.data;
-      this.filtered = [...res.data]; // keep a copy for filtering
-      this.totalPages = res.pagination.totalPages;
+    // contactService.getContacts uses workspaceService internally (see next file)
+    this.contactService.getContacts(this.page, this.limit).subscribe({
+      next: (res) => {
+        this.contacts = res.data;
+        this.filtered = [...res.data];
+        this.totalPages = res.pagination.totalPages;
+      },
+      error: (err) => {
+        console.error('Failed to load contacts', err);
+        this.contacts = [];
+        this.filtered = [];
+        this.totalPages = 1;
+      },
     });
   }
 

@@ -63,7 +63,7 @@ export class AuthService {
           const userId = decoded?.userId;
 
           // Fetch user by id
-          return this.http.get<IUser>(`${this.base}/users/${userId}`).pipe(
+          return this.http.get<IUser>(`${this.base}/user/${userId}`).pipe(
             tap((user) => {
               this.setUserData(user); // ✅ update localStorage user
             }),

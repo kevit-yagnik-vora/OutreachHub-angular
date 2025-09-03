@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ContactService } from '../../contact.service';
-import { Contact } from '../../model/contact.model';
+import { IContact } from '../../model/contact.model';
 
 @Component({
   selector: 'app-contact-form',
@@ -62,10 +62,10 @@ export class ContactFormComponent implements OnInit {
   submit() {
     if (this.form.invalid) return;
 
-    const payload: Contact = {
+    const payload: IContact = {
       ...this.form.value,
       tags: this.tags,
-    } as Contact;
+    } as IContact;
 
     this.saving = true;
 

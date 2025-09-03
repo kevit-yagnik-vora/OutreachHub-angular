@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ContactService } from '../../contact.service';
-import { Contact } from '../../model/contact.model';
+import { IContact } from '../../model/contact.model';
 
 @Component({
   selector: 'app-contact-details',
   templateUrl: './contact-details.component.html',
 })
 export class ContactDetailsComponent implements OnInit {
-  contact: Contact | null = null;
+  contact: IContact | null = null;
 
   constructor(
     private route: ActivatedRoute,

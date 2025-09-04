@@ -2,30 +2,46 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { MainLayoutComponent } from './layout/main-layout/main-layout.component';
 import { AuthLayoutComponent } from './layout/auth-layout/auth-layout.component';
+import { NoAccessComponent } from './features/no-access/no-access.component';
 
 const routes: Routes = [
   {
     path: '',
     component: MainLayoutComponent,
-    loadChildren: () =>
-      import('./features/home/home.module').then((m) => m.HomeModule),
+    children: [
+      {
+        path: '',
+        loadChildren: () =>
+          import('./features/home/home.module').then((m) => m.HomeModule),
+      },
+      {
+        path: 'contacts',
+        loadChildren: () =>
+          import('./features/contacts/contacts.module').then(
+            (m) => m.ContactsModule
+          ),
+      },
+      {
+        path: 'no-access',
+        component: NoAccessComponent,
+      },
+    ],
   },
   {
     path: 'auth',
     component: AuthLayoutComponent,
-    loadChildren: () =>
-      import('./core/auth/auth.module').then((m) => m.AuthModule),
+    children: [
+      {
+        path: '',
+        loadChildren: () =>
+          import('./core/auth/auth.module').then((m) => m.AuthModule),
+      },
+    ],
   },
   {
-    path: 'contacts',
-    component: MainLayoutComponent,
-
-    loadChildren: () =>
-      import('./features/contacts/contacts.module').then(
-        (m) => m.ContactsModule
-      ),
+    path: '**',
+    redirectTo: '',
   },
-  { path: '**', redirectTo: '' },
 ];
 
 @NgModule({

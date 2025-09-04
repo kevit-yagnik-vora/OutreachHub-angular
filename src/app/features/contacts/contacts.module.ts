@@ -6,20 +6,21 @@ import { ContactsListComponent } from './pages/contacts-list/contacts-list.compo
 import { ContactFormComponent } from './pages/contact-form/contact-form.component';
 import { ContactDetailsComponent } from './pages/contact-details/contact-details.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-
+import { RouterModule } from '@angular/router';
 
 @NgModule({
   declarations: [
     ContactsListComponent,
     ContactFormComponent,
-    ContactDetailsComponent
+    ContactDetailsComponent,
   ],
   imports: [
     CommonModule,
     ContactsRoutingModule,
     CommonModule,
     ReactiveFormsModule,
-    FormsModule
-  ]
+    FormsModule,
+    RouterModule,
+  ],
 })
-export class ContactsModule { }
+export class ContactsModule {}

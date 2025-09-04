@@ -96,6 +96,8 @@ export class HeaderComponent {
   onWorkspaceChange(ws: any) {
     this.selectedWorkspace = ws;
     this.workspaceService.setWorkspace(ws);
+    console.log('Switched to workspace', ws);
+    this.router.navigateByUrl('/');
     // Optionally: emit analytics/log or navigate
   }
 }

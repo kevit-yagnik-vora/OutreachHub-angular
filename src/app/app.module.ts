@@ -7,9 +7,10 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LayoutModule } from './layout/layout.module';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { AuthInterceptor } from './core/auth/auth.interceptor';
+import { NoAccessComponent } from './features/no-access/no-access.component';
 
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [AppComponent, NoAccessComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,

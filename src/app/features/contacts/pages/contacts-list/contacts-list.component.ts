@@ -3,6 +3,7 @@ import { ContactService } from '../../contact.service';
 import { IContact } from '../../model/contact.model';
 import { Subscription } from 'rxjs';
 import { WorkspaceService } from '../../../../core/services/workspace.service';
+import { RoleService } from '../../../../core/services/role.service';
 
 @Component({
   selector: 'app-contacts-list',
@@ -24,7 +25,8 @@ export class ContactsListComponent implements OnInit {
 
   constructor(
     private contactService: ContactService,
-    private workspaceService: WorkspaceService
+    private workspaceService: WorkspaceService,
+    public roleService: RoleService
   ) {}
 
   ngOnInit() {

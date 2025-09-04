@@ -25,7 +25,14 @@ export class ContactService {
 
   /** Get all contacts for selected workspace */
   getContacts(page: number, limit: number): Observable<any> {
+    const ws = this.workspaceService.getWorkspace();
     const workspaceId = this.getWorkspaceIdOrThrow();
+    console.log('Fetching contacts for workspace', ws.role);
+    if (ws.role === 'Viewer') {
+      return this.http.get<any>(
+        `${this.baseUrl}/all/byWorkspace/${workspaceId}?page=${page}&limit=${limit}`
+      );
+    }
     return this.http.get<any>(
       `${this.baseUrl}/byWorkspace/${workspaceId}?page=${page}&limit=${limit}`
     );

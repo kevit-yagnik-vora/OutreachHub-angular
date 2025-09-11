@@ -39,7 +39,7 @@
         >
           <option disabled value="">Select Workspace</option>
           <option *ngFor="let ws of user?.workspaces" [ngValue]="ws">
-            {{ ws.workspace.name }} ({{ ws.role }})
+            {{ ws.workspaceId.name }} ({{ ws.role }})
           </option>
         </select>
 
@@ -166,7 +166,7 @@
         >
           <option disabled value="">Select Workspace</option>
           <option *ngFor="let ws of user?.workspaces" [ngValue]="ws">
-            {{ ws.workspace.name }} ({{ ws.role }})
+            {{ ws.workspaceId.name }} ({{ ws.role }})
           </option>
         </select>
 

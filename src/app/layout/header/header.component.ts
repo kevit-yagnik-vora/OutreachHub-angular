@@ -4,7 +4,7 @@ import { AuthService } from '../../core/auth/auth.service';
 import { WorkspaceService } from '../../core/services/workspace.service';
 
 interface IUserWorkspace {
-  workspace: {
+  workspaceId: {
     _id: string;
     name: string;
   };
@@ -47,6 +47,7 @@ export class HeaderComponent {
 
     // 2) Try to get stored workspace from service/localStorage
     const stored = this.workspaceService.getWorkspace();
+    console.log('Stored workspace:', this.user.workspaces);
 
     if (stored && this.user?.workspaces?.length) {
       // Remap to the SAME object instance from user.workspaces

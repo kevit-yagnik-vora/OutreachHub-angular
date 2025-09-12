@@ -22,6 +22,13 @@ const routes: Routes = [
           ),
       },
       {
+        path: 'message-templates',
+        loadChildren: () =>
+          import('./features/message-templates/message-templates.module').then(
+            (m) => m.MessageTemplatesModule
+          ),
+      },
+      {
         path: 'no-access',
         component: NoAccessComponent,
       },

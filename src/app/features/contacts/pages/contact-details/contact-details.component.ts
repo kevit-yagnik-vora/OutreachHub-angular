@@ -9,18 +9,16 @@ import { IContact } from '../../model/contact.model';
 })
 export class ContactDetailsComponent implements OnInit {
   contact: IContact | null = null;
-
   constructor(
     private route: ActivatedRoute,
     private contactService: ContactService
   ) {}
-
-  ngOnInit(): void {
+  ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
-      this.contactService.getContactById(id).subscribe({
-        next: (c) => (this.contact = c),
-      });
+      this.contactService
+        .getContactById(id)
+        .subscribe((c) => (this.contact = c));
     }
   }
 }

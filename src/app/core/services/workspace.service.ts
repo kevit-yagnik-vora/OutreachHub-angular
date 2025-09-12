@@ -31,6 +31,6 @@ export class WorkspaceService {
 
   // convenience: return workspace id or null
   getWorkspaceId(): string | null {
-    return this.getWorkspace()?.workspace?._id ?? null;
+    return this.getWorkspace()?.workspaceId?._id ?? null;
   }
 }

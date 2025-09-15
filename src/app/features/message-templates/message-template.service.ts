@@ -22,10 +22,21 @@ export class MessageTemplateService {
   }
 
   update(id: string, data: any): Observable<any> {
+    console.log({ id, data });
     return this.http.put<any>(`${this.baseUrl}/${id}`, data);
   }
 
   delete(id: string): Observable<any> {
     return this.http.delete<any>(`${this.baseUrl}/${id}`);
+  }
+
+  getByWorkspace(
+    workspaceId: string,
+    page: number = 1,
+    limit: number = 10
+  ): Observable<any> {
+    return this.http.get(
+      `${this.baseUrl}/byWorkspace/${workspaceId}?page=${page}&limit=${limit}`
+    );
   }
 }

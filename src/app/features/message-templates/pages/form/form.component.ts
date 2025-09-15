@@ -36,6 +36,7 @@ export class MessageTemplateFormComponent implements OnInit {
     if (this.templateId) {
       this.service.getById(this.templateId).subscribe((data) => {
         this.form.patchValue(data);
+        this.form.get('workspace')?.setValue(data.workspace._id);
       });
     }
   }
@@ -44,6 +45,7 @@ export class MessageTemplateFormComponent implements OnInit {
     if (this.form.invalid) return;
 
     if (this.templateId) {
+      console.log(this.form.value.workspace._id);
       this.service.update(this.templateId, this.form.value).subscribe(() => {
         this.router.navigate(['/message-templates']);
       });

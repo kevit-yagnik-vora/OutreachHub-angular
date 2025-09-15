@@ -49,20 +49,37 @@ export class ContactsListComponent implements OnInit, OnDestroy {
   }
 
   loadContacts() {
-    this.contactService
-      .getContacts(this.page, this.limit, this.searchTerm)
-      .subscribe({
-        next: (res) => {
-          this.contacts = res.data || [];
-          this.filtered = [...this.contacts];
-          this.totalPages = res.pagination?.totalPages || 1;
-        },
-        error: (e) => {
-          console.error('Failed to load contacts', e);
-          this.contacts = [];
-          this.filtered = [];
-        },
-      });
+    if (this.roleService.isEditor()) {
+      this.contactService
+        .getContacts(this.page, this.limit, this.searchTerm)
+        .subscribe({
+          next: (res) => {
+            this.contacts = res.data || [];
+            this.filtered = [...this.contacts];
+            this.totalPages = res.pagination?.totalPages || 1;
+          },
+          error: (e) => {
+            console.error('Failed to load contacts', e);
+            this.contacts = [];
+            this.filtered = [];
+          },
+        });
+    } else {
+      this.contactService
+        .getAllContacts(this.page, this.limit, this.searchTerm)
+        .subscribe({
+          next: (res) => {
+            this.contacts = res.data || [];
+            this.filtered = [...this.contacts];
+            this.totalPages = res.pagination?.totalPages || 1;
+          },
+          error: (e) => {
+            console.error('Failed to load contacts', e);
+            this.contacts = [];
+            this.filtered = [];
+          },
+        });
+    }
   }
 
   nextPage() {

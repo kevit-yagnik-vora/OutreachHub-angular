@@ -31,6 +31,17 @@ export class ContactService {
     );
   }
 
+  getAllContacts(page: number, limit: number, search = ''): Observable<any> {
+    const workspaceId = this.getWorkspaceIdOrThrow();
+    const params =
+      `?page=${page}&limit=${limit}` +
+      (search ? `&search=${encodeURIComponent(search)}` : '');
+
+    return this.http.get<any>(
+      `${this.baseUrl}/all/byWorkspace/${workspaceId}${params}`
+    );
+  }
+
   getContactById(id: string): Observable<IContact> {
     return this.http.get<IContact>(`${this.baseUrl}/${id}`);
   }

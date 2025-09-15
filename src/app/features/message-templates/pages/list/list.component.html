@@ -101,4 +101,26 @@
       </div>
     </div>
   </div>
+  <!-- Pagination -->
+  <div class="flex justify-between items-center mt-6">
+    <button
+      (click)="prevPage()"
+      [disabled]="page === 1"
+      class="px-4 py-2 rounded-lg bg-slate-200 text-slate-600 disabled:opacity-50"
+    >
+      Previous
+    </button>
+
+    <span class="text-sm text-slate-500">
+      Page {{ pagination.page }} of {{ pagination.totalPages }}
+    </span>
+
+    <button
+      (click)="nextPage()"
+      [disabled]="page === pagination.totalPages"
+      class="px-4 py-2 rounded-lg bg-slate-200 text-slate-600 disabled:opacity-50"
+    >
+      Next
+    </button>
+  </div>
 </div>

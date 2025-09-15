@@ -1,24 +1,24 @@
 export type TemplateType = 'Text' | 'Text-Image';
 
-export interface MessageContent {
+export interface IMessageContent {
   _id?: string; // present in GET responses
   text: string;
   imageUrl?: string;
 }
 
-export interface WorkspaceMini {
+export interface IWorkspaceMini {
   _id: string;
   name: string;
   createdBy?: string;
   description?: string;
 }
 
-export interface MessageTemplate {
+export interface IMessageTemplate {
   _id: string;
   name: string;
   type: TemplateType;
-  message: MessageContent;
-  workspace?: WorkspaceMini;
+  message: IMessageContent;
+  workspace?: IWorkspaceMini;
   createdBy?: string;
   createdAt?: string;
   updatedAt?: string;

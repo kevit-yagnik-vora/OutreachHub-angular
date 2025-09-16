@@ -39,4 +39,14 @@ export class MessageTemplateService {
       `${this.baseUrl}/byWorkspace/${workspaceId}?page=${page}&limit=${limit}`
     );
   }
+
+  getAllByWorkspace(
+    workspaceId: string,
+    page: number = 1,
+    limit: number = 10
+  ): Observable<any> {
+    return this.http.get(
+      `${this.baseUrl}/all/byWorkspace/${workspaceId}?page=${page}&limit=${limit}`
+    );
+  }
 }

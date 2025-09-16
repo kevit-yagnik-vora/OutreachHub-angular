@@ -29,17 +29,31 @@ export class MessageTemplateListComponent implements OnInit {
   }
 
   load() {
-    this.messageService
-      .getByWorkspace(this.workspaceId, this.page, this.limit)
-      .subscribe({
-        next: (res) => {
-          this.templates = res.data;
-          this.pagination = res.pagination;
-        },
-        error: (err) => {
-          console.error('Error loading templates', err);
-        },
-      });
+    if (this.roleService.isEditor()) {
+      this.messageService
+        .getByWorkspace(this.workspaceId, this.page, this.limit)
+        .subscribe({
+          next: (res) => {
+            this.templates = res.data;
+            this.pagination = res.pagination;
+          },
+          error: (err) => {
+            console.error('Error loading templates', err);
+          },
+        });
+    } else {
+      this.messageService
+        .getAllByWorkspace(this.workspaceId, this.page, this.limit)
+        .subscribe({
+          next: (res) => {
+            this.templates = res.data;
+            this.pagination = res.pagination;
+          },
+          error: (err) => {
+            console.error('Error loading templates', err);
+          },
+        });
+    }
   }
 
   deleteMessage() {

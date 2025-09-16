@@ -8,7 +8,7 @@ import { EditorGuard } from '../../core/guards/editor.guard';
 const routes: Routes = [
   {
     path: '',
-    component: ContactsListComponent
+    component: ContactsListComponent,
   },
   {
     path: 'new',
@@ -22,7 +22,7 @@ const routes: Routes = [
   },
   {
     path: ':id',
-    component: ContactDetailsComponent
+    component: ContactDetailsComponent,
   },
 ];
 

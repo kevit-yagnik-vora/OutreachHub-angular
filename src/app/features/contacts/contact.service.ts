@@ -3,7 +3,6 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { IContact } from './model/contact.model';
 import { environment } from '../../../environments/environment';
-import { AuthService } from '../../core/auth/auth.service';
 import { WorkspaceService } from '../../core/services/workspace.service';
 
 @Injectable({ providedIn: 'root' })
@@ -17,24 +16,29 @@ export class ContactService {
 
   private getWorkspaceIdOrThrow(): string {
     const id = this.workspaceService.getWorkspaceId();
-    if (!id) {
-      throw new Error('No workspace selected');
-    }
+    if (!id) throw new Error('No workspace selected');
     return id;
   }
 
-  /** Get all contacts for selected workspace */
-  getContacts(page: number, limit: number): Observable<any> {
-    const ws = this.workspaceService.getWorkspace();
+  getContacts(page: number, limit: number, search = ''): Observable<any> {
     const workspaceId = this.getWorkspaceIdOrThrow();
-    console.log('Fetching contacts for workspace', ws.role);
-    if (ws.role === 'Viewer') {
-      return this.http.get<any>(
-        `${this.baseUrl}/all/byWorkspace/${workspaceId}?page=${page}&limit=${limit}`
-      );
-    }
+    const params =
+      `?page=${page}&limit=${limit}` +
+      (search ? `&search=${encodeURIComponent(search)}` : '');
+
     return this.http.get<any>(
-      `${this.baseUrl}/byWorkspace/${workspaceId}?page=${page}&limit=${limit}`
+      `${this.baseUrl}/byWorkspace/${workspaceId}${params}`
+    );
+  }
+
+  getAllContacts(page: number, limit: number, search = ''): Observable<any> {
+    const workspaceId = this.getWorkspaceIdOrThrow();
+    const params =
+      `?page=${page}&limit=${limit}` +
+      (search ? `&search=${encodeURIComponent(search)}` : '');
+
+    return this.http.get<any>(
+      `${this.baseUrl}/all/byWorkspace/${workspaceId}${params}`
     );
   }
 

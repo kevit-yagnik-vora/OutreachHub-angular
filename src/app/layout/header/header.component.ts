@@ -47,7 +47,6 @@ export class HeaderComponent {
 
     // 2) Try to get stored workspace from service/localStorage
     const stored = this.workspaceService.getWorkspace();
-    console.log('Stored workspace:', this.user.workspaces);
 
     if (stored && this.user?.workspaces?.length) {
       // Remap to the SAME object instance from user.workspaces
@@ -56,8 +55,10 @@ export class HeaderComponent {
           w?.workspace?._id === stored?.workspace?._id &&
           w?.role === stored?.role
       );
+
       if (match) {
         this.selectedWorkspace = match;
+        this.workspaceService.setWorkspace(this.selectedWorkspace);
       } else {
         // fallback to first, and store it
         this.selectedWorkspace = this.user.workspaces[0];
@@ -97,7 +98,6 @@ export class HeaderComponent {
   onWorkspaceChange(ws: any) {
     this.selectedWorkspace = ws;
     this.workspaceService.setWorkspace(ws);
-    console.log('Switched to workspace', ws);
     this.router.navigateByUrl('/');
     // Optionally: emit analytics/log or navigate
   }

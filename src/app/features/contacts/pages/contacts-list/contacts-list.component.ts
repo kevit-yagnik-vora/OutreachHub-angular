@@ -1,15 +1,15 @@
-import { Component, OnInit } from '@angular/core';
-import { ContactService } from '../../contact.service';
-import { IContact } from '../../model/contact.model';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
+import { ContactService } from '../../contact.service';
 import { WorkspaceService } from '../../../../core/services/workspace.service';
 import { RoleService } from '../../../../core/services/role.service';
+import { IContact } from '../../model/contact.model';
 
 @Component({
   selector: 'app-contacts-list',
   templateUrl: './contacts-list.component.html',
 })
-export class ContactsListComponent implements OnInit {
+export class ContactsListComponent implements OnInit, OnDestroy {
   page = 1;
   limit = 5;
   totalPages = 1;
@@ -30,16 +30,15 @@ export class ContactsListComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    // subscribe to workspace changes and reload
+    // subscribe to workspace changes
     this.wsSub = this.workspaceService.selectedWorkspace$.subscribe((ws) => {
-      // when ws changes (or becomes available), reload contacts
       if (ws) {
-        this.page = 1; // reset page when workspace changes
+        this.page = 1;
         this.loadContacts();
       }
     });
 
-    // initial load - only if workspace already present
+    // initial load if workspace already present
     if (this.workspaceService.getWorkspace()) {
       this.loadContacts();
     }
@@ -49,25 +48,40 @@ export class ContactsListComponent implements OnInit {
     this.wsSub?.unsubscribe();
   }
 
-  /** Load contacts from API */
   loadContacts() {
-    // contactService.getContacts uses workspaceService internally (see next file)
-    this.contactService.getContacts(this.page, this.limit).subscribe({
-      next: (res) => {
-        this.contacts = res.data;
-        this.filtered = [...res.data];
-        this.totalPages = res.pagination.totalPages;
-      },
-      error: (err) => {
-        console.error('Failed to load contacts', err);
-        this.contacts = [];
-        this.filtered = [];
-        this.totalPages = 1;
-      },
-    });
+    if (this.roleService.isEditor()) {
+      this.contactService
+        .getContacts(this.page, this.limit, this.searchTerm)
+        .subscribe({
+          next: (res) => {
+            this.contacts = res.data || [];
+            this.filtered = [...this.contacts];
+            this.totalPages = res.pagination?.totalPages || 1;
+          },
+          error: (e) => {
+            console.error('Failed to load contacts', e);
+            this.contacts = [];
+            this.filtered = [];
+          },
+        });
+    } else {
+      this.contactService
+        .getAllContacts(this.page, this.limit, this.searchTerm)
+        .subscribe({
+          next: (res) => {
+            this.contacts = res.data || [];
+            this.filtered = [...this.contacts];
+            this.totalPages = res.pagination?.totalPages || 1;
+          },
+          error: (e) => {
+            console.error('Failed to load contacts', e);
+            this.contacts = [];
+            this.filtered = [];
+          },
+        });
+    }
   }
 
-  /** Go to next page */
   nextPage() {
     if (this.page < this.totalPages) {
       this.page++;
@@ -75,7 +89,6 @@ export class ContactsListComponent implements OnInit {
     }
   }
 
-  /** Go to previous page */
   prevPage() {
     if (this.page > 1) {
       this.page--;
@@ -83,34 +96,30 @@ export class ContactsListComponent implements OnInit {
     }
   }
 
-  /** Search filter */
   applyFilter() {
-    const q = this.searchTerm.trim().toLowerCase();
-
+    // If you want search on backend, call loadContacts() with searchTerm:
+    // this.loadContacts();
+    // If you want client-side filter on current page (already loaded):
+    const q = (this.searchTerm || '').trim().toLowerCase();
     if (!q) {
       this.filtered = [...this.contacts];
       return;
     }
-
     this.filtered = this.contacts.filter((c) => {
       const inName = c.name?.toLowerCase().includes(q);
       const inPhone = c.phoneNumber
         ? c.phoneNumber.toString().toLowerCase().includes(q)
         : false;
-      const inTags = (c.tags || []).some((t: string) =>
-        t.toLowerCase().includes(q)
-      );
+      const inTags = (c.tags || []).some((t) => t.toLowerCase().includes(q));
       return inName || inPhone || inTags;
     });
   }
 
-  /** Ask before deleting */
   confirmDelete(contact: IContact) {
     this.contactToDelete = contact;
     this.showConfirm = true;
   }
 
-  /** Delete contact */
   deleteContact() {
     if (!this.contactToDelete?._id) return;
     this.contactService.deleteContact(this.contactToDelete._id).subscribe({
@@ -123,7 +132,6 @@ export class ContactsListComponent implements OnInit {
     });
   }
 
-  /** For ngFor performance */
   trackById(_: number, c: IContact) {
     return c._id || c.phoneNumber;
   }

@@ -1,0 +1,126 @@
+<div class="max-w-3xl mx-auto p-6 bg-white rounded-lg shadow">
+  <h2 class="text-lg font-semibold mb-4">Create Campaign</h2>
+
+  <form [formGroup]="form" (ngSubmit)="save()" class="space-y-4">
+    <!-- Name -->
+    <div>
+      <label class="block text-sm font-medium">Name</label>
+      <input formControlName="name" class="mt-1 w-full border rounded px-3 py-2" />
+      <div *ngIf="form.get('name')?.invalid && form.get('name')?.touched" class="text-sm text-red-500">
+        Name is required
+      </div>
+    </div>
+
+    <!-- Description -->
+    <div>
+      <label class="block text-sm font-medium">Description</label>
+      <textarea formControlName="description" rows="2" class="mt-1 w-full border rounded px-3 py-2"></textarea>
+    </div>
+
+    <!-- TEMPLATE SEARCH/SELECT BY NAME -->
+    <div class="relative">
+      <label class="block text-sm font-medium">Message Template (select by name)</label>
+
+      <input
+        #templateSearchInput
+        type="text"
+        placeholder="Type template name..."
+        (focus)="templatesOpen = true"
+        (input)="onTemplateSearch($any($event.target).value)"
+        (keydown.enter)="trySelectByName($any($event.target).value); $event.preventDefault()"
+        class="mt-1 w-full border rounded px-3 py-2"
+        autocomplete="off"
+      />
+
+      <!-- suggestions dropdown -->
+      <div
+        *ngIf="templatesOpen"
+        class="absolute z-50 mt-1 w-full bg-white border rounded shadow max-h-64 overflow-auto"
+        (mousedown)="$event.preventDefault()"
+      >
+        <ng-container *ngIf="filteredTemplates.length > 0; else noTemplates">
+          <div
+            *ngFor="let t of filteredTemplates"
+            (click)="selectTemplate(t)"
+            class="px-3 py-2 hover:bg-slate-50 cursor-pointer"
+          >
+            <div class="flex justify-between items-center">
+              <div class="font-medium">{{ t.name }}</div>
+              <div class="text-xs text-slate-500">{{ t.type }}</div>
+            </div>
+            <div class="text-xs text-slate-500 line-clamp-2 mt-1">{{ t.message.text }}</div>
+          </div>
+        </ng-container>
+        <ng-template #noTemplates>
+          <div class="px-3 py-2 text-sm text-slate-500">No templates found</div>
+        </ng-template>
+      </div>
+    </div>
+
+    <!-- selected template preview -->
+    <div *ngIf="selectedTemplate" class="mt-3 p-3 border rounded bg-slate-50 flex gap-3 items-start">
+      <div class="flex-1">
+        <div class="font-semibold">{{ selectedTemplate.name }}</div>
+        <div class="text-xs text-slate-600 mt-1 line-clamp-3">{{ selectedTemplate.message.text }}</div>
+      </div>
+      <div *ngIf="selectedTemplate.message?.imageUrl" class="w-28 h-16 rounded overflow-hidden">
+        <img [src]="selectedTemplate.message.imageUrl" class="w-full h-full object-cover" />
+      </div>
+      <div>
+        <button type="button" class="text-xs text-red-500" (click)="clearSelectedTemplate()">Clear</button>
+      </div>
+    </div>
+
+    <!-- Tags -->
+    <div>
+      <label class="block text-sm font-medium">Target tags</label>
+      <div class="mt-2 flex gap-2 items-center flex-wrap">
+        <span *ngFor="let t of form.get('selectedTags')?.value || []" class="inline-flex items-center gap-2 px-2 py-1 bg-slate-100 rounded">
+          <span class="text-sm">{{ t }}</span>
+          <button type="button" (click)="removeTag(t)" class="text-xs text-red-500">×</button>
+        </span>
+
+        <input
+          #tagInput
+          type="text"
+          placeholder="Add tag and press Enter or comma"
+          class="border rounded px-2 py-1"
+          (keydown.enter)="addTagFromInput(tagInput); $event.preventDefault()"
+          (blur)="addTagFromInput(tagInput)"
+          (keydown)="onTagInputKeydown($event, tagInput)"
+        />
+      </div>
+      <div class="mt-2 text-sm text-slate-500">
+        Selected tags: <span class="font-medium">{{ (form.get('selectedTags')?.value || []).length }}</span>
+        • Total recipients: <span class="font-medium">{{ totalRecipients }}</span>
+      </div>
+    </div>
+
+    <!-- Message -->
+    <div formGroupName="message">
+      <label class="block text-sm font-medium">Message Text</label>
+      <textarea formControlName="text" rows="4" class="mt-1 w-full border rounded px-3 py-2"></textarea>
+      <div *ngIf="form.get('message.text')?.invalid && form.get('message.text')?.touched" class="text-sm text-red-500">
+        Message text is required
+      </div>
+
+      <label class="block text-sm font-medium mt-2">Image URL (required for Text-Image templates)</label>
+      <input formControlName="imageUrl" class="mt-1 w-full border rounded px-3 py-2" />
+      <div *ngIf="form.get('message.imageUrl')?.invalid && form.get('message.imageUrl')?.touched" class="text-sm text-red-500">
+        Image URL is required for Text-Image templates
+      </div>
+
+      <div *ngIf="form.get('message.imageUrl')?.value" class="mt-3 w-full aspect-video rounded overflow-hidden border">
+        <img [src]="form.get('message.imageUrl')?.value" class="w-full h-full object-cover" />
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="flex justify-end gap-3">
+      <button type="button" class="px-3 py-2 border rounded" (click)="router.navigate(['/campaigns'])">Cancel</button>
+      <button type="submit" [disabled]="form.invalid" class="px-4 py-2 bg-indigo-600 text-white rounded disabled:opacity-60">
+        Create (Save as Draft)
+      </button>
+    </div>
+  </form>
+</div>

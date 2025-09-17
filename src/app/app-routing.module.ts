@@ -29,6 +29,13 @@ const routes: Routes = [
           ),
       },
       {
+        path: 'campaigns',
+        loadChildren: () =>
+          import('./features/campaigns/campaigns.module').then(
+            (m) => m.CampaignsModule
+          ),
+      },
+      {
         path: 'no-access',
         component: NoAccessComponent,
       },

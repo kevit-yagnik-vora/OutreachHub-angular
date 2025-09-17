@@ -3,6 +3,7 @@ import { interval, Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { CampaignService } from '../../campaign.service';
 import { WorkspaceService } from '../../../../core/services/workspace.service';
+import { RoleService } from '../../../../core/services/role.service';
 
 @Component({
   selector: 'app-campaign-list',
@@ -17,7 +18,8 @@ export class CampaignListComponent implements OnInit, OnDestroy {
 
   constructor(
     private svc: CampaignService,
-    private workspaceService: WorkspaceService
+    private workspaceService: WorkspaceService,
+    public roleService: RoleService
   ) {}
   workspaceId: string | null = this.workspaceService.getWorkspaceId();
 

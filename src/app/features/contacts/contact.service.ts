@@ -65,4 +65,11 @@ export class ContactService {
   deleteContact(id: string): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/${id}`);
   }
+
+  getContactsByTags(workspaceId: string, tags: string[]) {
+    const tagsCsv = tags.join(',');
+    return this.http.get<any[]>(
+      `${this.baseUrl}/contacts/byTags?workspaceId=${workspaceId}&tags=${tagsCsv}`
+    );
+  }
 }

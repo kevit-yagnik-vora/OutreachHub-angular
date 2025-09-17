@@ -3,7 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { CampaignListComponent } from './pages/list/list.component';
 import { CampaignFormComponent } from './pages/form/form.component';
 import { EditorGuard } from '../../core/guards/editor.guard';
-import { DetailsComponent } from './pages/details/details.component';
+import { CampaignDetailsComponent } from './pages/details/details.component';
 import { MessagesComponent } from './pages/messages/messages.component';
 
 const routes: Routes = [
@@ -23,7 +23,7 @@ const routes: Routes = [
   },
   {
     path: ':id',
-    component: DetailsComponent,
+    component: CampaignDetailsComponent,
   },
   {
     path: ':id/messages',

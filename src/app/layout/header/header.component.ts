@@ -45,7 +45,6 @@ export class HeaderComponent {
       this.user = JSON.parse(raw);
     }
 
-    // 2) Try to get stored workspace from service/localStorage
     const stored = this.workspaceService.getWorkspace();
 
     if (stored && this.user?.workspaces?.length) {
@@ -65,7 +64,7 @@ export class HeaderComponent {
         this.workspaceService.setWorkspace(this.selectedWorkspace);
       }
     } else if (this.user?.workspaces?.length) {
-      // 3) Nothing stored: default to first workspace and store it
+      // Nothing stored: default to first workspace and store it
       this.selectedWorkspace = this.user.workspaces[0];
       this.workspaceService.setWorkspace(this.selectedWorkspace);
     } else {
@@ -99,6 +98,5 @@ export class HeaderComponent {
     this.selectedWorkspace = ws;
     this.workspaceService.setWorkspace(ws);
     this.router.navigateByUrl('/');
-    // Optionally: emit analytics/log or navigate
   }
 }

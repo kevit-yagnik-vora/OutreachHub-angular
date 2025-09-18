@@ -16,7 +16,7 @@ export const NO_AUTH = new HttpContextToken<boolean>(() => false);
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private readonly base = environment.apiUrl; // adjust if needed
+  private readonly base = environment.apiUrl;
 
   constructor(private http: HttpClient, private store: TokenStorageService) {}
 
@@ -29,17 +29,13 @@ export class AuthService {
       )
       .pipe(
         switchMap((res) => {
-          // Save tokens
           this.setAccessToken(res.access_token);
           this.setRefreshToken(res.refresh_token);
-
-          // Decode token
           const decoded: any = jwtDecode(res.access_token);
-          const userId = decoded?.userId; // <-- backend must embed this
-
-          // Call Nest API to get user
+          const userId = decoded?.userId;
           return this.http.get<IUser>(`${this.base}/user/${userId}`);
         }),
+
         tap((user: IUser) => {
           this.setUserData(user);
         })
@@ -55,19 +51,16 @@ export class AuthService {
       )
       .pipe(
         switchMap((res) => {
-          // Save new token
           this.setAccessToken(res.access_token);
 
-          // Decode token → extract userId
           const decoded: any = jwtDecode(res.access_token);
           const userId = decoded?.userId;
 
-          // Fetch user by id
           return this.http.get<IUser>(`${this.base}/user/${userId}`).pipe(
             tap((user) => {
-              this.setUserData(user); // ✅ update localStorage user
+              this.setUserData(user);
             }),
-            map(() => ({ access_token: res.access_token })) // ✅ return token as expected
+            map(() => ({ access_token: res.access_token }))
           );
         })
       );

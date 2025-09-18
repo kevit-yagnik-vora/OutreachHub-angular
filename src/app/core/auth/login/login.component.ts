@@ -14,7 +14,6 @@ export class LoginComponent {
     password: ['', [Validators.required]],
   });
 
-  loading = false;
   error = '';
 
   constructor(

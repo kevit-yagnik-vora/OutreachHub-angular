@@ -15,14 +15,14 @@
         <span
           class="inline-flex items-center px-4 py-1.5 rounded-full text-base font-semibold"
           [ngClass]="{
-            'bg-slate-100 text-slate-700': campaignMessages.status === 'Draft',
+            'bg-slate-100 text-slate-700': campaign?.status === 'Draft',
             'bg-amber-100 text-amber-800 animate-pulse':
-              campaignMessages.status === 'Running',
+              campaign?.status === 'Running',
             'bg-emerald-100 text-emerald-800':
-              campaignMessages.status === 'Completed'
+              campaign?.status === 'Completed'
           }"
         >
-          {{ campaignMessages.status }}
+          {{ campaign?.status || 'Unknown' }}
         </span>
       </div>
     </header>
@@ -127,7 +127,7 @@
                   {{ msg.status }}
                 </span>
                 <p class="text-xs text-slate-400 mt-1">
-                  {{ msg.sentAt | date : "short" }}
+                  {{ msg.sentAt | date : "medium" }}
                 </p>
               </div>
             </li>

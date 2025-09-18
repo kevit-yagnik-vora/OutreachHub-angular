@@ -79,8 +79,12 @@ export class CampaignService {
   }
 
   // (Optional) poll campaign status
-  getCampaignById(campaignId: string) {
-    return this.http.get<any>(`${this.base}/${campaignId}`);
+  getCampaignById(id: string): Observable<any> {
+    return this.http.get(`${this.base}/${id}`);
+  }
+
+  updateCampaign(data: any, id: string) {
+    return this.http.put(`${this.base}/${id}`, data);
   }
 
   // getCampaignMessages(campaignId: string): Observable<any[]> {

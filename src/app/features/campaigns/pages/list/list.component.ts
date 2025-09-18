@@ -45,7 +45,7 @@ export class CampaignListComponent implements OnInit, OnDestroy {
   }
 
   startPolling(campaignId: string) {
-    this.pollingSubs[campaignId] = interval(3000)
+    this.pollingSubs[campaignId] = interval(60000)
       .pipe(switchMap(() => this.svc.get(campaignId)))
       .subscribe((updated: any) => {
         const idx = this.campaigns.findIndex((x) => x._id === campaignId);

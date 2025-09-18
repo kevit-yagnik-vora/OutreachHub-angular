@@ -2,12 +2,14 @@ import {
   Component,
   OnInit,
   OnDestroy,
+  AfterViewInit,
   ViewChild,
   ElementRef,
+  ChangeDetectorRef,
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subject } from 'rxjs';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MessageTemplateService } from '../../../message-templates/message-template.service';
 import { CampaignService } from '../../campaign.service';
 import { WorkspaceService } from '../../../../core/services/workspace.service';
@@ -24,7 +26,7 @@ interface MessageTemplate {
   templateUrl: './form.component.html',
   styleUrls: ['./form.component.scss'],
 })
-export class CampaignFormComponent implements OnInit, OnDestroy {
+export class CampaignFormComponent implements OnInit, OnDestroy, AfterViewInit {
   form!: FormGroup;
   templates: MessageTemplate[] = [];
   filteredTemplates: MessageTemplate[] = [];
@@ -34,6 +36,10 @@ export class CampaignFormComponent implements OnInit, OnDestroy {
   userId = localStorage.getItem('userId') || '';
   totalRecipients = 0;
   tags: string[] = [];
+  isEdit = false;
+  campaignId = '';
+  campaign: any;
+
   private destroy$ = new Subject<void>();
 
   @ViewChild('templateSearchInput')
@@ -44,27 +50,75 @@ export class CampaignFormComponent implements OnInit, OnDestroy {
     private templateSvc: MessageTemplateService,
     private campaignSvc: CampaignService,
     private workspaceService: WorkspaceService,
-    public router: Router
+    public router: Router,
+    private route: ActivatedRoute,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
     this.form = this.fb.group({
       name: ['', Validators.required],
       description: [''],
-      templateId: [null, Validators.required],
-      selectedTags: [[], Validators.required],
+      selectedTags: [[]],
       message: this.fb.group({
         text: ['', Validators.required],
-        imageUrl: [''],
-      }),
+        imageUrl: ['']
+      })
     });
 
+    this.route.paramMap.subscribe((params) => {
+      const id = params.get('id');
+      this.campaignId = id || '';
+      if (this.campaignId) {
+        this.isEdit = true;
+        this.campaignSvc
+          .getCampaignById(this.campaignId)
+          .subscribe((campaign) => {
+            console.log('Campaign loaded', campaign);
+            this.campaign = campaign;
+            const patchData = {
+              name: campaign.name,
+              description: campaign.description,
+              launchDate: campaign.launchDate
+                ? new Date(campaign.launchDate).toISOString().slice(0, 16)
+                : '',
+              selectedTags: [...(campaign.selectedTags || [])],
+              templateId: campaign.message?._id || '',
+              message: {
+                text: campaign.message?.text || '',
+                imageUrl: campaign.message?.imageUrl || '',
+              }
+            };
+            console.log('Patching form with:', patchData);
+            this.form.patchValue(patchData);
+            console.log('Form value after patch:', this.form.value);
+            console.log('selectedTags set to:', this.form.get('selectedTags')?.value);
+            this.updateRecipientCount(this.form.get('selectedTags')?.value);
+            this.cdr.detectChanges();
+            this.loadTemplates();
+          });
+      }
+    });
     this.loadTemplates();
   }
 
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+  }
+
+  ngAfterViewInit(): void {
+    this.updateInputValue();
+  }
+
+  private updateInputValue(): void {
+    setTimeout(() => {
+      if (this.selectedTemplate && this.templateSearchInput) {
+        this.templateSearchInput.nativeElement.value = this.selectedTemplate.name;
+        this.templatesOpen = false;
+        this.cdr.detectChanges();
+      }
+    }, 0);
   }
 
   // Load templates from backend
@@ -75,6 +129,16 @@ export class CampaignFormComponent implements OnInit, OnDestroy {
         console.log('Templates loaded', res);
         this.templates = Array.isArray(res) ? res : res?.data || [];
         this.filteredTemplates = [...this.templates];
+        // If editing and campaign has message, set selectedTemplate by content match
+        if (this.isEdit && this.campaign?.message) {
+          this.selectedTemplate = this.templates.find(t => t.message.text === this.campaign.message.text && t.message.imageUrl === this.campaign.message.imageUrl);
+          if (this.selectedTemplate) {
+            console.log('selectedTemplate set from templates by content match:', this.selectedTemplate);
+            this.updateInputValue();
+          } else {
+            console.log('Template not found for message:', this.campaign.message);
+          }
+        }
       },
       error: (err) => {
         console.error('Failed to load templates', err);
@@ -223,10 +287,19 @@ export class CampaignFormComponent implements OnInit, OnDestroy {
       workspace: this.workspaceId,
     };
 
-    this.campaignSvc.create(payload).subscribe({
-      next: () => this.router.navigate(['/campaigns']),
-      error: (err) => console.error('Create failed', err),
-    });
+    if (this.isEdit) {
+      this.campaignSvc
+        .updateCampaign(this.form.value, this.campaignId)
+        .subscribe({
+          next: () => this.router.navigate(['/campaigns']),
+          error: (err) => console.error('Update failed', err),
+        });
+    } else {
+      this.campaignSvc.create(payload).subscribe({
+        next: () => this.router.navigate(['/campaigns']),
+        error: (err) => console.error('Create failed', err),
+      });
+    }
   }
 
   // clear selected template

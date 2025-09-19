@@ -29,7 +29,6 @@ export class AuthInterceptor implements HttpInterceptor {
 
     const token = this.auth.getAccessToken();
 
-    // If no token, just pass through
     if (!token) {
       return next.handle(req);
     }

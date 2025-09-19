@@ -70,7 +70,6 @@ export class CampaignDetailsComponent implements OnInit, OnDestroy {
       )
       .subscribe({
         next: (res) => {
-          console.log('Polled messages:', res);
           this.campaignMessages = res;
           this.cdr.detectChanges();
         },

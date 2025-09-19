@@ -10,7 +10,6 @@ export class EditorGuard implements CanActivate {
     if (this.roleService.isEditor()) {
       return true;
     }
-    // If not editor → redirect to no-access page
     return this.router.parseUrl('/no-access');
   }
 }

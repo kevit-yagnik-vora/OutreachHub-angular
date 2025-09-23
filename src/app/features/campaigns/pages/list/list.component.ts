@@ -35,7 +35,6 @@ export class CampaignListComponent implements OnInit, OnDestroy {
         this.campaigns = res.data;
         this.pagination = res.pagination;
 
-        // start polling for any Running campaigns
         this.campaigns.forEach((c) => {
           if (c.status === 'Running' && !this.pollingSubs[c._id]) {
             this.startPolling(c._id);
@@ -52,7 +51,6 @@ export class CampaignListComponent implements OnInit, OnDestroy {
         if (idx >= 0) this.campaigns[idx] = updated;
 
         if (updated.status !== 'Running') {
-          // stop polling
           this.pollingSubs[campaignId].unsubscribe();
           delete this.pollingSubs[campaignId];
         }
@@ -95,8 +93,7 @@ export class CampaignListComponent implements OnInit, OnDestroy {
       !confirm('Launch campaign? This will create messages and start sending.')
     )
       return;
-    this.svc.launch(id).subscribe(() => {
-      // reload list and polling will start automatically
+    this.svc.launchCampaign(id).subscribe(() => {
       this.load();
     });
   }

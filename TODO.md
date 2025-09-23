@@ -1,14 +1,12 @@
-# TODO: Fix FormGroup Initialization in Campaign Form Component
+# Angular Material Import Fix
 
-## Steps to Complete
+## Steps to Complete:
+- [x] Analyze the Angular Material compilation errors
+- [x] Identify missing Material modules in dashboard.module.ts
+- [ ] Update dashboard.module.ts with required Material modules
+- [ ] Test the fix by running ng serve
 
-- [x] Initialize the `form` property in `ngOnInit()` using `FormBuilder.group()` with the required form controls and nested groups to match template bindings and patchValue calls.
-- [x] Ensure form controls include: `name`, `description`, `selectedTags`, `templateId`, `message` (FormGroup with `text` and `imageUrl`), and `launchDate` if needed.
-- [x] Add appropriate validators (e.g., required for name and message.text).
-- [x] Add ChangeDetectorRef to force UI updates after patching form and setting selectedTemplate.
-- [x] Use spread operator for selectedTags array to ensure new reference for change detection.
-- [x] Correct patchValue keys to match campaign data structure (selectedTags, message._id, message.text, message.imageUrl).
-- [x] Set selectedTemplate from loaded templates by matching campaign.message.text and imageUrl.
-- [x] Set template input box value and close template dropdown on load.
-- [x] Call updateRecipientCount after patchValue to update totalRecipients count on form load.
-- [ ] Test the form loading on edit to verify no runtime errors and data is correctly patched into the form fields, including selected tags and message template input.
+## Required Material Modules:
+- MatDateRangePickerModule (for mat-date-range-input and mat-date-range-picker)
+- MatButtonModule (for mat-datepicker-toggle button functionality)
+- MatIconModule (for icons in datepicker toggle)

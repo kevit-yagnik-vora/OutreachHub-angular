@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { MainLayoutComponent } from './layout/main-layout/main-layout.component';
 import { AuthLayoutComponent } from './layout/auth-layout/auth-layout.component';
 import { NoAccessComponent } from './features/no-access/no-access.component';
+import { DashboardComponent } from './features/dashboard/dashboard.component';
 
 const routes: Routes = [
   {
@@ -13,6 +14,10 @@ const routes: Routes = [
         path: '',
         loadChildren: () =>
           import('./features/home/home.module').then((m) => m.HomeModule),
+      },
+      {
+        path: 'dashboard',
+        component: DashboardComponent,
       },
       {
         path: 'contacts',

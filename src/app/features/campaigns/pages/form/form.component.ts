@@ -62,8 +62,8 @@ export class CampaignFormComponent implements OnInit, OnDestroy, AfterViewInit {
       selectedTags: [[]],
       message: this.fb.group({
         text: ['', Validators.required],
-        imageUrl: ['']
-      })
+        imageUrl: [''],
+      }),
     });
 
     this.route.paramMap.subscribe((params) => {
@@ -87,12 +87,15 @@ export class CampaignFormComponent implements OnInit, OnDestroy, AfterViewInit {
               message: {
                 text: campaign.message?.text || '',
                 imageUrl: campaign.message?.imageUrl || '',
-              }
+              },
             };
             console.log('Patching form with:', patchData);
             this.form.patchValue(patchData);
             console.log('Form value after patch:', this.form.value);
-            console.log('selectedTags set to:', this.form.get('selectedTags')?.value);
+            console.log(
+              'selectedTags set to:',
+              this.form.get('selectedTags')?.value
+            );
             this.updateRecipientCount(this.form.get('selectedTags')?.value);
             this.cdr.detectChanges();
             this.loadTemplates();
@@ -114,14 +117,14 @@ export class CampaignFormComponent implements OnInit, OnDestroy, AfterViewInit {
   private updateInputValue(): void {
     setTimeout(() => {
       if (this.selectedTemplate && this.templateSearchInput) {
-        this.templateSearchInput.nativeElement.value = this.selectedTemplate.name;
+        this.templateSearchInput.nativeElement.value =
+          this.selectedTemplate.name;
         this.templatesOpen = false;
         this.cdr.detectChanges();
       }
     }, 0);
   }
 
-  // Load templates from backend
   loadTemplates() {
     if (!this.workspaceId) return;
     this.templateSvc.listByWorkspace(this.workspaceId, 1, 500).subscribe({
@@ -129,14 +132,23 @@ export class CampaignFormComponent implements OnInit, OnDestroy, AfterViewInit {
         console.log('Templates loaded', res);
         this.templates = Array.isArray(res) ? res : res?.data || [];
         this.filteredTemplates = [...this.templates];
-        // If editing and campaign has message, set selectedTemplate by content match
         if (this.isEdit && this.campaign?.message) {
-          this.selectedTemplate = this.templates.find(t => t.message.text === this.campaign.message.text && t.message.imageUrl === this.campaign.message.imageUrl);
+          this.selectedTemplate = this.templates.find(
+            (t) =>
+              t.message.text === this.campaign.message.text &&
+              t.message.imageUrl === this.campaign.message.imageUrl
+          );
           if (this.selectedTemplate) {
-            console.log('selectedTemplate set from templates by content match:', this.selectedTemplate);
+            console.log(
+              'selectedTemplate set from templates by content match:',
+              this.selectedTemplate
+            );
             this.updateInputValue();
           } else {
-            console.log('Template not found for message:', this.campaign.message);
+            console.log(
+              'Template not found for message:',
+              this.campaign.message
+            );
           }
         }
       },
@@ -148,7 +160,6 @@ export class CampaignFormComponent implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
-  // Search filter
   onTemplateSearch(q: string) {
     const s = (q || '').trim().toLowerCase();
     if (!s) {
@@ -161,12 +172,10 @@ export class CampaignFormComponent implements OnInit, OnDestroy, AfterViewInit {
     this.templatesOpen = true;
   }
 
-  // Select a template
   selectTemplate(t: MessageTemplate) {
     this.selectedTemplate = t;
     this.templatesOpen = false;
 
-    // patch values into form
     this.form.patchValue({
       templateId: t._id,
       message: {
@@ -177,13 +186,11 @@ export class CampaignFormComponent implements OnInit, OnDestroy, AfterViewInit {
 
     this.updateImageValidators(t.type);
 
-    // put template name back in input box
     if (this.templateSearchInput) {
       this.templateSearchInput.nativeElement.value = t.name;
     }
   }
 
-  // If user presses Enter to match by name
   trySelectByName(inputValue: string) {
     const name = (inputValue || '').trim();
     if (!name) return;
@@ -204,7 +211,6 @@ export class CampaignFormComponent implements OnInit, OnDestroy, AfterViewInit {
     this.templatesOpen = true;
   }
 
-  // Add validators dynamically for image
   private updateImageValidators(type?: 'Text' | 'Text-Image' | null) {
     const imageControl = this.form.get(['message', 'imageUrl'])!;
     if (type === 'Text-Image') {
@@ -215,7 +221,6 @@ export class CampaignFormComponent implements OnInit, OnDestroy, AfterViewInit {
     imageControl.updateValueAndValidity({ onlySelf: true, emitEvent: false });
   }
 
-  // ---------------- TAG MANAGEMENT ----------------
   addTagFromInput(el: HTMLInputElement) {
     const raw = (el.value || '').trim();
     if (!raw) return;
@@ -268,7 +273,6 @@ export class CampaignFormComponent implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
-  // Save campaign
   save() {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
@@ -302,7 +306,6 @@ export class CampaignFormComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  // clear selected template
   clearSelectedTemplate() {
     this.selectedTemplate = null;
     this.form.patchValue({

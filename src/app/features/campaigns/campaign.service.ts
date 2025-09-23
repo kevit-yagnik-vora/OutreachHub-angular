@@ -15,10 +15,6 @@ export class CampaignService {
     );
   }
 
-  // getCampaignById(id: string) {
-  //   return this.http.get<any>(`${this.base}/${id}`);
-  // }
-
   get(id: string) {
     return this.http.get(`${this.base}/${id}`);
   }
@@ -37,10 +33,6 @@ export class CampaignService {
 
   copy(id: string) {
     return this.http.post(`${this.base}/${id}/copy`, {});
-  }
-
-  launch(id: string) {
-    return this.http.post(`${this.base}/${id}/launch`, {});
   }
 
   getMessages(id: string, page = 1, limit = 20) {

@@ -8,7 +8,12 @@ export class DashboardService {
 
   constructor(private http: HttpClient) {}
 
-  getOverview(): Observable<any> {
-    return this.http.get(`${this.baseUrl}/overview`);
+  getOverview(from?: string, to?: string): Observable<any> {
+    let url = `${this.baseUrl}/overview`;
+    const params: string[] = [];
+    if (from) params.push(`from=${from}`);
+    if (to) params.push(`to=${to}`);
+    if (params.length) url += `?${params.join('&')}`;
+    return this.http.get(url);
   }
 }

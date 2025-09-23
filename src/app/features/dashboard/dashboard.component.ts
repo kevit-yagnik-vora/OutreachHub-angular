@@ -10,6 +10,9 @@ export class DashboardComponent implements OnInit {
   overview: any = {};
   loading = true;
 
+  fromDate: string | null = null;
+  toDate: string | null = null;
+
   // Chart configs
   lineChartData: ChartData<'line'> = { datasets: [], labels: [] };
   pieChartData: ChartData<'pie'> = { datasets: [], labels: [] };
@@ -20,22 +23,28 @@ export class DashboardComponent implements OnInit {
 
   constructor(private dashboardService: DashboardService) {}
 
-  ngOnInit() {
-    console.log('DashboardComponent initialized');
-    this.dashboardService.getOverview().subscribe((data) => {
-      this.overview = data;
-      this.prepareCharts();
-      this.loading = false;
-    });
+  ngOnInit(): void {
+    this.loadData();
+  }
+
+  loadData() {
+    this.loading = true;
+    this.dashboardService
+      .getOverview(this.fromDate!, this.toDate!)
+      .subscribe((data) => {
+        this.overview = data;
+        this.prepareCharts();
+        this.loading = false;
+      });
   }
 
   private prepareCharts() {
-    // Line chart (last 7 days)
+    // ✅ Line Chart (Campaigns by Date)
     this.lineChartData = {
-      labels: this.overview.last7Days.map((d: any) => d._id),
+      labels: this.overview.lastDays.map((d: any) => d._id),
       datasets: [
         {
-          data: this.overview.last7Days.map((d: any) => d.count),
+          data: this.overview.lastDays.map((d: any) => d.count),
           label: 'Campaigns',
           borderColor: '#6366F1',
           backgroundColor: 'rgba(99, 102, 241, 0.2)',
@@ -45,15 +54,27 @@ export class DashboardComponent implements OnInit {
       ],
     };
 
-    // Pie chart (campaign status)
+    // ✅ Pie Chart (Campaign Message Status)
     this.pieChartData = {
-      labels: this.overview.campaignStats.map((s: any) => s._id),
+      labels: this.overview.campaignStats.map(
+        (s: any) => s._id ?? 'Unknown' // fallback
+      ),
       datasets: [
         {
-          data: this.overview.campaignStats.map((s: any) => s.count),
-          backgroundColor: ['#22c55e', '#eab308', '#ef4444'],
+          data: this.overview.campaignStats.map((s: any) => s.count ?? 0),
+          backgroundColor: [
+            '#22c55e', // green
+            '#eab308', // yellow
+            '#ef4444', // red
+            '#3b82f6', // blue (extra fallback)
+            '#6b7280', // gray (extra fallback)
+          ],
         },
       ],
     };
+  }
+
+  getKey(key: unknown): string {
+    return String(key);
   }
 }

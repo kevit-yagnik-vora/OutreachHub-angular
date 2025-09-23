@@ -9,6 +9,7 @@ import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { AuthInterceptor } from './core/auth/auth.interceptor';
 import { NoAccessComponent } from './features/no-access/no-access.component';
 import { DashboardModule } from './features/dashboard/dashboard.module';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
 @NgModule({
   declarations: [AppComponent, NoAccessComponent],
@@ -23,6 +24,7 @@ import { DashboardModule } from './features/dashboard/dashboard.module';
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+    provideAnimationsAsync(),
   ],
   bootstrap: [AppComponent],
 })

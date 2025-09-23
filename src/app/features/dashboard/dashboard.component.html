@@ -1,0 +1,52 @@
+<div class="p-6 space-y-6" *ngIf="!loading">
+  <!-- Top Overview Cards -->
+  <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4">
+    <div
+      class="bg-white shadow rounded-2xl p-4 text-center"
+      *ngFor="let item of overview?.counts | keyvalue"
+    >
+      <p class="text-gray-500 text-sm">
+        {{ ($any(item.key)) | titlecase }}
+      </p>
+      <h2 class="text-2xl font-bold text-indigo-600">
+        {{ item.value }}
+      </h2>
+    </div>
+  </div>
+
+  <!-- Charts Section -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <!-- Line Chart -->
+    <div class="bg-white shadow rounded-2xl p-4">
+      <h3 class="font-semibold text-lg mb-4">
+        Campaigns Launched (Last 7 Days)
+      </h3>
+      <canvas
+        baseChart
+        [data]="lineChartData"
+        [options]="chartOptions"
+        chartType="line"
+      >
+      </canvas>
+    </div>
+
+    <!-- Pie Chart -->
+    <div class="bg-white shadow rounded-2xl p-4">
+      <h3 class="font-semibold text-lg mb-4">Campaign Message Status</h3>
+      <canvas
+        baseChart
+        [data]="pieChartData"
+        [options]="chartOptions"
+        chartType="pie"
+      >
+      </canvas>
+    </div>
+  </div>
+</div>
+
+<!-- Loading State -->
+<div *ngIf="loading" class="flex items-center justify-center py-12">
+  <div
+    class="animate-spin rounded-full h-12 w-12 border-4 border-indigo-600 border-t-transparent"
+  ></div>
+</div>

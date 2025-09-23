@@ -8,6 +8,7 @@ import { LayoutModule } from './layout/layout.module';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { AuthInterceptor } from './core/auth/auth.interceptor';
 import { NoAccessComponent } from './features/no-access/no-access.component';
+import { DashboardModule } from './features/dashboard/dashboard.module';
 
 @NgModule({
   declarations: [AppComponent, NoAccessComponent],
@@ -18,6 +19,7 @@ import { NoAccessComponent } from './features/no-access/no-access.component';
     LayoutModule,
     AppRoutingModule,
     HttpClientModule,
+    DashboardModule,
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },

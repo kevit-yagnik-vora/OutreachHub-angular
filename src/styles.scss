@@ -1,24 +1,244 @@
+@import "@angular/material/prebuilt-themes/indigo-pink.css";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @keyframes slideDown {
-    from {
-        opacity: 0;
-        transform: translateY(-10px);
-    }
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
 
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .animate-slideDown {
-    animation: slideDown 0.3s ease-out;
+  animation: slideDown 0.3s ease-out;
 }
 
 body::-webkit-scrollbar {
-    display: none;
-    /* Hides the scrollbar */
+  display: none;
+  /* Hides the scrollbar */
+}
+
+/* Toast Notification Styles */
+.cdk-overlay-container {
+  z-index: 9999 !important;
+}
+
+.mat-mdc-snack-bar-container.custom-toast {
+  --mdc-snackbar-supporting-text-color: #1f2937;
+
+  margin: 20px !important;
+  padding: 0 !important;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15) !important;
+  border-radius: 10px !important;
+  min-width: 320px !important;
+  max-width: 450px !important;
+
+  .mdc-snackbar__surface {
+    border-radius: 10px !important;
+    padding: 14px 18px !important;
+    min-height: auto !important;
+    box-shadow: none !important;
+    display: flex !important;
+    align-items: center !important;
+  }
+
+  .mat-mdc-snack-bar-label,
+  .mdc-snackbar__label {
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    line-height: 1.5 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .mat-mdc-snack-bar-actions {
+    margin: 0 0 0 12px !important;
+    padding: 0 !important;
+  }
+
+  .mat-mdc-button.mat-mdc-snack-bar-action {
+    min-width: auto !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 28px !important;
+    height: 28px !important;
+    border-radius: 6px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    transition: all 0.2s ease !important;
+
+    .mat-mdc-button-touch-target {
+      height: 28px !important;
+      width: 28px !important;
+    }
+
+    .mdc-button__label {
+      font-size: 16px !important;
+      font-weight: 500 !important;
+      line-height: 1 !important;
+    }
+
+    &:hover {
+      transform: scale(1.08);
+    }
+
+    &:active {
+      transform: scale(0.95);
+    }
+  }
+
+  // Success Toast - Clean Green
+  &.toast-success {
+    --mdc-snackbar-container-color: #ffffff !important;
+
+    .mdc-snackbar__surface {
+      background: #ffffff !important;
+      border-left: 4px solid #10b981;
+      border: 1px solid #e5e7eb;
+      border-left: 4px solid #10b981;
+    }
+
+    .mat-mdc-snack-bar-label,
+    .mdc-snackbar__label {
+      color: #1f2937 !important;
+    }
+
+    .mat-mdc-button.mat-mdc-snack-bar-action {
+      background: #f0fdf4 !important;
+
+      .mdc-button__label {
+        color: #10b981 !important;
+      }
+
+      &:hover {
+        background: #dcfce7 !important;
+      }
+    }
+  }
+
+  // Error Toast - Clean Red
+  &.toast-error {
+    --mdc-snackbar-container-color: #ffffff !important;
+
+    .mdc-snackbar__surface {
+      background: #ffffff !important;
+      border-left: 4px solid #ef4444;
+      border: 1px solid #e5e7eb;
+      border-left: 4px solid #ef4444;
+    }
+
+    .mat-mdc-snack-bar-label,
+    .mdc-snackbar__label {
+      color: #1f2937 !important;
+    }
+
+    .mat-mdc-button.mat-mdc-snack-bar-action {
+      background: #fef2f2 !important;
+
+      .mdc-button__label {
+        color: #ef4444 !important;
+      }
+
+      &:hover {
+        background: #fee2e2 !important;
+      }
+    }
+  }
+
+  // Info Toast - Clean Blue
+  &.toast-info {
+    --mdc-snackbar-container-color: #ffffff !important;
+
+    .mdc-snackbar__surface {
+      background: #ffffff !important;
+      border-left: 4px solid #3b82f6;
+      border: 1px solid #e5e7eb;
+      border-left: 4px solid #3b82f6;
+    }
+
+    .mat-mdc-snack-bar-label,
+    .mdc-snackbar__label {
+      color: #1f2937 !important;
+    }
+
+    .mat-mdc-button.mat-mdc-snack-bar-action {
+      background: #eff6ff !important;
+
+      .mdc-button__label {
+        color: #3b82f6 !important;
+      }
+
+      &:hover {
+        background: #dbeafe !important;
+      }
+    }
+  }
+
+  // Warning Toast - Clean Orange
+  &.toast-warning {
+    --mdc-snackbar-container-color: #ffffff !important;
+
+    .mdc-snackbar__surface {
+      background: #ffffff !important;
+      border-left: 4px solid #f59e0b;
+      border: 1px solid #e5e7eb;
+      border-left: 4px solid #f59e0b;
+    }
+
+    .mat-mdc-snack-bar-label,
+    .mdc-snackbar__label {
+      color: #1f2937 !important;
+    }
+
+    .mat-mdc-button.mat-mdc-snack-bar-action {
+      background: #fffbeb !important;
+
+      .mdc-button__label {
+        color: #f59e0b !important;
+      }
+
+      &:hover {
+        background: #fef3c7 !important;
+      }
+    }
+  }
+}
+
+// Animation
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideOutRight {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+.mat-mdc-snack-bar-container.custom-toast {
+  animation: slideInRight 0.3s ease-out;
+
+  &.mat-mdc-snack-bar-container-exiting {
+    animation: slideOutRight 0.2s ease-in;
+  }
 }

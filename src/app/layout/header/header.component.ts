@@ -2,6 +2,7 @@ import { Component, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../core/auth/auth.service';
 import { WorkspaceService } from '../../core/services/workspace.service';
+import { ToastService } from '../../core/services/toast.service';
 
 interface IUserWorkspace {
   workspaceId: {
@@ -32,7 +33,8 @@ export class HeaderComponent {
   constructor(
     private authService: AuthService,
     private router: Router,
-    private workspaceService: WorkspaceService
+    private workspaceService: WorkspaceService,
+    private toast: ToastService
   ) {}
   mobileMenuOpen = false;
   scrolled = false;
@@ -78,6 +80,7 @@ export class HeaderComponent {
 
   logout() {
     localStorage.removeItem('selectedWorkspace');
+    this.toast.info('Logging out...');
     this.authService.logout();
     this.router.navigate(['/auth/login']);
   }

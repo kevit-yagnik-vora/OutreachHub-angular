@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../auth.service';
+import { ToastService } from '../../services/toast.service';
 
 @Component({
   selector: 'app-login',
@@ -21,7 +22,8 @@ export class LoginComponent implements OnInit {
     private fb: FormBuilder,
     private auth: AuthService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private toast: ToastService
   ) {}
 
   ngOnInit() {
@@ -30,15 +32,30 @@ export class LoginComponent implements OnInit {
   }
 
   submit() {
-    if (this.form.invalid) return;
+    if (this.form.invalid) {
+      this.toast.error('Please fill in all required fields');
+      return;
+    }
+
     this.auth
       .login(this.form.value.email ?? '', this.form.value.password ?? '')
       .subscribe({
-        next: () => {
+        next: (user) => {
+          // Show success toast
+          this.toast.success(`Welcome back, ${user.name || 'User'}!`);
+
           // Redirect to the return URL after successful login
           this.router.navigateByUrl(this.returnUrl);
         },
-        error: () => (this.error = 'Invalid credentials'),
+        error: (err) => {
+          // Extract error message from API response
+          // API returns: {"message":"Invalid credentials","error":"Unauthorized","statusCode":401}
+          const errorMessage =
+            err?.error?.message || err?.message || 'Invalid email or password';
+
+          this.error = errorMessage;
+          this.toast.error(errorMessage);
+        },
       });
   }
 }

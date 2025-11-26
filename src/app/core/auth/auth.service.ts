@@ -71,9 +71,15 @@ export class AuthService {
     this.http
       .post(`${this.base}/auth/logout`, { refreshToken })
       .subscribe(() => {
-        this.store.clear();
-        localStorage.removeItem('user');
+        this.clearSession();
+        window.location.href = '/auth/login';
       });
+  }
+
+  clearSession() {
+    this.store.clear();
+    localStorage.removeItem('user');
+    localStorage.removeItem('selectedWorkspace');
   }
 
   getAccessToken(): string | null {
